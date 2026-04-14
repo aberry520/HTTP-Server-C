@@ -31,13 +31,18 @@ int main() {
     // ---- CONNECTION ESTABLISHED ----
 
     // 6. Create a buffer to hold incoming data
-    //buffer = some byte array;
+    char buffer[1024];
 
     // 7. Read data from the client
-    //bytes_read = read(client_fd, buffer);
+    ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer));
 
     // 8. Print what you received
-    //print(buffer);
+    if (bytes_read < 0) {
+    perror("read failed");
+    return 1;
+    }
+    buffer[bytes_read] = '\0'; // manually null terminate
+    printf("%s\n", buffer);
 
     // 9. (Optional for now) Send a response
     //write(client_fd, "some response");
