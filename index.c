@@ -20,13 +20,13 @@ int main() {
     address.sin_addr.s_addr = INADDR_ANY;
 
     // 3. Bind the socket to that address
-    //bind(server_fd, address);
+    bind(server_fd, (struct sockaddr*)&address, sizeof(address));//int bind(int, const struct sockaddr *, socklen_t)
 
     // 4. Start listening for connections
-    //listen(server_fd, backlog_limit);
+    listen(server_fd, 3);//listen(int socket, int backlog); man listen for more
 
     // 5. Wait for a client to connect (BLOCKS here)
-    //client_fd = accept(server_fd);
+    int client_fd = accept(server_fd, (struct sockaddr *__restrict__)&address, sizeof(address));//int accept(int, struct sockaddr *__restrict__, socklen_t *__restrict__)
 
     // ---- CONNECTION ESTABLISHED ----
 
