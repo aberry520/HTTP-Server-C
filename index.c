@@ -18,15 +18,16 @@ int main() {
     address.sin_family = AF_INET;
     address.sin_port = htons(8080);
     address.sin_addr.s_addr = INADDR_ANY;
+    socklen_t size = sizeof(address);
 
     // 3. Bind the socket to that address
-    bind(server_fd, (struct sockaddr*)&address, sizeof(address));//int bind(int, const struct sockaddr *, socklen_t)
+    bind(server_fd, (struct sockaddr*)&address, size);//int bind(int, const struct sockaddr *, socklen_t)
 
     // 4. Start listening for connections
     listen(server_fd, 3);//listen(int socket, int backlog); man listen for more
 
     // 5. Wait for a client to connect (BLOCKS here)
-    int client_fd = accept(server_fd, (struct sockaddr *__restrict__)&address, sizeof(address));//int accept(int, struct sockaddr *__restrict__, socklen_t *__restrict__)
+    int client_fd = accept(server_fd, (struct sockaddr *__restrict__)&address, &size);//int accept(int, struct sockaddr *__restrict__, socklen_t *__restrict__)
 
     // ---- CONNECTION ESTABLISHED ----
 
@@ -44,14 +45,20 @@ int main() {
     buffer[bytes_read] = '\0'; // manually null terminate
     printf("%s\n", buffer);
 
-    // 9. (Optional for now) Send a response
-    //write(client_fd, "some response");
+    // 9. Send a response
+    char response[] =
+    "HTTP/1.1 200 OK\r\n"
+    "Content-Type: text/html\r\n"
+    "\r\n"
+    "<h1>Hello world!</h1>";
+    size_t response_size = sizeof(response) - 1;
+    write(client_fd, response, response_size);//ssize_t write(int __fd, const void *__buf, size_t __nbyte)
 
     // 10. Close the client connection
-    //close(client_fd);
+    close(client_fd);
 
     // 11. Close the server (for now, later you'll loop)
-    //close(server_fd);
+    close(server_fd);
 
     return 0;
 }
