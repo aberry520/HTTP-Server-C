@@ -51,7 +51,7 @@ int main() {
     "Content-Type: text/html\r\n"
     "\r\n"
     "<h1>Hello world!</h1>";
-    size_t response_size = sizeof(response) - 1;
+    size_t response_size = sizeof(response) - 1; // -1 gets rid of null terminator
     write(client_fd, response, response_size);//ssize_t write(int __fd, const void *__buf, size_t __nbyte)
 
     // 10. Close the client connection
